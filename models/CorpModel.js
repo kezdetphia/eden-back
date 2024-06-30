@@ -29,7 +29,13 @@ const CorpSchema = new mongoose.Schema(
     },
     desc: {
       type: String,
-      required: false,
+      required: true,
+    },
+    tier: {
+      String,
+    },
+    price: {
+      Number,
     },
   },
   { timestamps: true }
