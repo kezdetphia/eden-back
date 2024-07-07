@@ -31,7 +31,7 @@ const createCorp = async (req, res) => {
       });
     }
 
-    // Create the corporation
+    // Create the crop
     const corp = await Corp.create(req.body);
     res.status(201).json({ corp });
   } catch (error) {
