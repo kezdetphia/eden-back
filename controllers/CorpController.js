@@ -63,11 +63,17 @@ const getCorp = async (req, res) => {
       return res.status(400).json({ error: "Invalid ID format" });
     }
 
-    const corp = await Corp.findById(id).populate({
-      path: "owner",
-      model: "User",
-      select: "-password", //exclude password
-    });
+    const corp = await Corp.findById(id)
+      .populate({
+        path: "owner",
+        model: "User",
+        select: "-password", //exclude password
+      })
+      .populate({
+        path: "comments.user",
+        model: "User",
+        select: "username email", // Select the fields you want to include
+      });
     if (!corp) {
       return res.status(404).json({ error: "Corp not found" });
     }
@@ -81,9 +87,69 @@ const getCorp = async (req, res) => {
     });
   }
 };
+//this WORKS
+// const addCommentToCrop = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { comment } = req.body;
+
+//     const corp = await Corp.findById(id);
+//     if (!corp) {
+//       return res.status(404).json({ error: "Corp not found" });
+//     }
+
+//     // Ensure comments is an array and push the new comment
+//     corp.comments = corp.comments || [];
+//     corp.comments.push(comment);
+//     await corp.save();
+
+//     // Populate the user field in the comments
+//     const updatedCorp = await Corp.findById(id).populate("comments.user");
+
+//     res
+//       .status(200)
+//       .json({ message: "Comment added successfully", corp: updatedCorp });
+//   } catch (error) {
+//     console.error("Error adding comment to corp:", error);
+//     res.status(500).json({
+//       error:
+//         "An error occurred while adding the comment. Please try again later.",
+//     });
+//   }
+// };
+const addCommentToCrop = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { comment } = req.body;
+
+    const corp = await Corp.findById(id);
+    if (!corp) {
+      return res.status(404).json({ error: "Corp not found" });
+    }
+
+    // Ensure comments is an array and push the new comment with user details
+    corp.comments = corp.comments || [];
+    corp.comments.push({
+      text: comment.text,
+      userId: comment.userId,
+      username: comment.username,
+      createdAt: new Date(),
+    });
+    await corp.save();
+
+    res.status(200).json({ message: "Comment added successfully", corp });
+  } catch (error) {
+    console.error("Error adding comment to corp:", error);
+    res.status(500).json({
+      error:
+        "An error occurred while adding the comment. Please try again later.",
+    });
+  }
+};
 
 module.exports = {
   getAllCorps,
   createCorp,
   getCorp,
+  addCommentToCrop,
 };

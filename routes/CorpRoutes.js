@@ -10,4 +10,6 @@ router.post("/createcorp", verifyToken, CorpController.createCorp);
 
 router.get("/getcorp/:id", verifyToken, CorpController.getCorp);
 
+router.post("/addcropcomment/:id", CorpController.addCommentToCrop);
+
 module.exports = router;
