@@ -2,12 +2,16 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const http = require("http"); // Require HTTP module for socket.io
+const socketIo = require("socket.io");
 
 const userRoutes = require("./routes/UserRoutes");
 const CorpRoutes = require("./routes/CorpRoutes");
 
 //express app
 const app = express();
+const server = http.createServer(app); // Create HTTP server instance
+const io = socketIo(server); // Attach socket.io to HTTP server
 
 //middleware
 app.use(cors());
@@ -22,6 +26,7 @@ app.use((req, res, next) => {
 app.use("/api/users", userRoutes);
 app.use("/", CorpRoutes);
 
+//this works
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
