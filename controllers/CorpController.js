@@ -88,35 +88,6 @@ const getCorp = async (req, res) => {
   }
 };
 //this WORKS
-// const addCommentToCrop = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { comment } = req.body;
-
-//     const corp = await Corp.findById(id);
-//     if (!corp) {
-//       return res.status(404).json({ error: "Corp not found" });
-//     }
-
-//     // Ensure comments is an array and push the new comment
-//     corp.comments = corp.comments || [];
-//     corp.comments.push(comment);
-//     await corp.save();
-
-//     // Populate the user field in the comments
-//     const updatedCorp = await Corp.findById(id).populate("comments.user");
-
-//     res
-//       .status(200)
-//       .json({ message: "Comment added successfully", corp: updatedCorp });
-//   } catch (error) {
-//     console.error("Error adding comment to corp:", error);
-//     res.status(500).json({
-//       error:
-//         "An error occurred while adding the comment. Please try again later.",
-//     });
-//   }
-// };
 const addCommentToCrop = async (req, res) => {
   try {
     const { id } = req.params;
@@ -127,17 +98,17 @@ const addCommentToCrop = async (req, res) => {
       return res.status(404).json({ error: "Corp not found" });
     }
 
-    // Ensure comments is an array and push the new comment with user details
+    // Ensure comments is an array and push the new comment
     corp.comments = corp.comments || [];
-    corp.comments.push({
-      text: comment.text,
-      userId: comment.userId,
-      username: comment.username,
-      createdAt: new Date(),
-    });
+    corp.comments.push(comment);
     await corp.save();
 
-    res.status(200).json({ message: "Comment added successfully", corp });
+    // Populate the user field in the comments
+    const updatedCorp = await Corp.findById(id).populate("comments.user");
+
+    res
+      .status(200)
+      .json({ message: "Comment added successfully", corp: updatedCorp });
   } catch (error) {
     console.error("Error adding comment to corp:", error);
     res.status(500).json({
