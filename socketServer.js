@@ -1,7 +1,7 @@
 const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const User = require("./models/UserModel");
-const Message = require("./models/MessageModel");
+const Conversation = require("./models/MessageModel");
 
 const userSockets = {};
 
@@ -40,22 +40,42 @@ const socketServer = (server) => {
         console.warn(`Recipient socket ID not found for user: ${to}`);
       }
 
-      // Save the message to MongoDB
+      // Save the message to the appropriate conversation in MongoDB
       try {
-        const newMessage = new Message({
+        let conversation = await Conversation.findOne({
+          participants: {
+            $all: [
+              new mongoose.Types.ObjectId(from),
+              new mongoose.Types.ObjectId(to),
+            ],
+          },
+        });
+
+        if (!conversation) {
+          conversation = new Conversation({
+            participants: [
+              new mongoose.Types.ObjectId(from),
+              new mongoose.Types.ObjectId(to),
+            ],
+            messages: [],
+          });
+          await conversation.save();
+
+          // Add the conversation reference to both users
+          await User.findByIdAndUpdate(from, {
+            $push: { conversations: conversation._id },
+          });
+          await User.findByIdAndUpdate(to, {
+            $push: { conversations: conversation._id },
+          });
+        }
+
+        conversation.messages.push({
           from: new mongoose.Types.ObjectId(from),
-          to: new mongoose.Types.ObjectId(to),
           message,
         });
-        await newMessage.save();
-
-        // Update the sender and recipient with the new message
-        await User.findByIdAndUpdate(from, {
-          $push: { messages: newMessage._id },
-        });
-        await User.findByIdAndUpdate(to, {
-          $push: { messages: newMessage._id },
-        });
+        await conversation.save();
+        console.log(`Message saved to conversation ${conversation._id}`);
       } catch (error) {
         console.error("Error saving message to MongoDB:", error);
       }
@@ -70,31 +90,3 @@ const socketServer = (server) => {
 };
 
 module.exports = socketServer;
-// ------This works perfectly
-// const { Server } = require("socket.io");
-
-// const socketServer = (server) => {
-//   const io = new Server(server, {
-//     cors: {
-//       origin: "*", // Adjust this to your client's URL if needed
-//       methods: ["GET", "POST"],
-//     },
-//   });
-
-//   io.on("connection", (socket) => {
-//     console.log("a user connected");
-
-//     socket.on("chat message", (msg) => {
-//       console.log(`Received message: ${msg}`);
-//       io.emit("chat message", msg); // Broadcast message to all connected clients
-//     });
-
-//     socket.on("disconnect", (reason) => {
-//       console.log(`user disconnected: ${reason}`);
-//     });
-//   });
-// };
-
-// module.exports = socketServer;
-
-// ------This works perfectly

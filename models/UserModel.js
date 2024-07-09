@@ -25,7 +25,9 @@ const userSchema = new mongoose.Schema(
       type: [String],
       required: false,
     },
-    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
+    conversations: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
+    ],
   },
   { timestamps: true }
 );
