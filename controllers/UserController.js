@@ -82,7 +82,7 @@ const getUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate("messages");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const userRoutes = require("./routes/UserRoutes");
 const CorpRoutes = require("./routes/CorpRoutes");
+const MessageRoutes = require("./routes/MessageRoutes");
 const socketServer = require("./socketServer"); // Import the socketServer module
 
 //express app
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 
 app.use("/api/users", userRoutes);
 app.use("/", CorpRoutes);
+app.use("/chat", MessageRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -42,15 +44,15 @@ mongoose
     console.log(error);
   });
 
-//this works this is perfect
+//this works this is perfectly
 // require("dotenv").config();
 // const express = require("express");
 // const http = require("http");
 // const mongoose = require("mongoose");
 // const cors = require("cors");
-// const { Server } = require("socket.io");
 // const userRoutes = require("./routes/UserRoutes");
 // const CorpRoutes = require("./routes/CorpRoutes");
+// const socketServer = require("./socketServer"); // Import the socketServer module
 
 // //express app
 // const app = express();
@@ -59,25 +61,7 @@ mongoose
 // const server = http.createServer(app);
 
 // // Initialize socket.io server
-// const io = new Server(server, {
-//   cors: {
-//     origin: "*", // Adjust this to your client's URL if needed
-//     methods: ["GET", "POST"],
-//   },
-// });
-
-// io.on("connection", (socket) => {
-//   console.log("a user connected");
-
-//   socket.on("chat message", (msg) => {
-//     console.log(`Received message: ${msg}`);
-//     io.emit("chat message", msg); // Broadcast message to all connected clients
-//   });
-
-//   socket.on("disconnect", (reason) => {
-//     console.log(`user disconnected: ${reason}`);
-//   });
-// });
+// socketServer(server); // Use the socketServer module
 
 // //middleware
 // app.use(cors());

@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
       type: [String],
       required: false,
     },
+    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   },
   { timestamps: true }
 );
