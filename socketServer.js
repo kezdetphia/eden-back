@@ -70,12 +70,25 @@ const socketServer = (server) => {
           });
         }
 
-        conversation.messages.push({
+        const newMessage = {
           from: new mongoose.Types.ObjectId(from),
           message,
-        });
+        };
+        conversation.messages.push(newMessage);
         await conversation.save();
         console.log(`Message saved to conversation ${conversation._id}`);
+
+        // Emit the newMessage event to both participants
+        io.to(userSockets[from]).emit("newMessage", {
+          conversationId: conversation._id,
+          ...newMessage,
+        });
+        if (recipientSocketId) {
+          io.to(recipientSocketId).emit("newMessage", {
+            conversationId: conversation._id,
+            ...newMessage,
+          });
+        }
       } catch (error) {
         console.error("Error saving message to MongoDB:", error);
       }
