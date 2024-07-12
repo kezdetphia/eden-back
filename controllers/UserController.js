@@ -2,6 +2,7 @@ const User = require("../models/UserModel");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 const signUp = async (req, res) => {
   const { username, email, password, passwordRepeat } = req.body;
@@ -82,12 +83,12 @@ const getUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    const user = await User.findById(id).populate("messages");
+    const user = await User.findById(id).populate("conversations");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    res.status(200).json(user);
+    const { password, ...userWithoutPassword } = user.toObject();
+    res.status(200).json(userWithoutPassword);
   } catch (err) {
     console.error("Error fetching user:", err);
     res.status(500).json({ message: "Server error", error: err.message });

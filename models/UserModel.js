@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema(
       type: [String],
       required: false,
     },
+    avatar: {
+      type: String,
+    },
     conversations: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
     ],

@@ -21,7 +21,7 @@ const CorpSchema = new mongoose.Schema(
     },
     location: {
       type: String,
-      required: true,
+      // required: true,
     },
     image: {
       type: String,
@@ -41,12 +41,12 @@ const CorpSchema = new mongoose.Schema(
       {
         text: {
           type: String,
-          required: true,
+          // required: true,
         },
         user: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
-          required: true,
+          // required: true,
         },
         createdAt: {
           type: Date,

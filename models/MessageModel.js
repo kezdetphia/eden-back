@@ -11,6 +11,15 @@ const conversationSchema = new mongoose.Schema({
   messages: [messageSchema],
 });
 
+// conversationSchema.set("toJSON", {
+//   virtuals: true,
+//   versionKey: false,
+//   transform: (doc, ret) => {
+//     delete ret.id;
+//     return ret;
+//   },
+// });
+
 const Conversation = mongoose.model("Conversation", conversationSchema);
 
 module.exports = Conversation;
