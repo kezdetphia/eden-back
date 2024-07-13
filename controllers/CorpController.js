@@ -6,7 +6,10 @@ const jwt = require("jsonwebtoken");
 
 const getAllCorps = async (req, res) => {
   try {
-    const corps = await Corp.find();
+    const corps = await Corp.find(
+      {},
+      "_id title location amount category image tier  "
+    );
     return res.status(200).json({ corps });
   } catch (error) {
     console.error("Error fetching corporations:", error);
@@ -67,7 +70,7 @@ const getCorp = async (req, res) => {
       .populate({
         path: "owner",
         model: "User",
-        select: "-password", //exclude password
+        select: "_id avatar username createdAt ", //exclude password, conversations, email; include location, tier
       })
       .populate({
         path: "comments.user",
