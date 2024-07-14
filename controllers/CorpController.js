@@ -75,7 +75,7 @@ const getCorp = async (req, res) => {
       .populate({
         path: "comments.user",
         model: "User",
-        select: "username email", // Select the fields you want to include
+        select: "username email avatar", // Select the fields you want to include
       });
     if (!corp) {
       return res.status(404).json({ error: "Corp not found" });
