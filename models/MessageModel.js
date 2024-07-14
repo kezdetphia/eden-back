@@ -9,16 +9,8 @@ const messageSchema = new mongoose.Schema({
 const conversationSchema = new mongoose.Schema({
   participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   messages: [messageSchema],
+  productImageUrl: String,
 });
-
-// conversationSchema.set("toJSON", {
-//   virtuals: true,
-//   versionKey: false,
-//   transform: (doc, ret) => {
-//     delete ret.id;
-//     return ret;
-//   },
-// });
 
 const Conversation = mongoose.model("Conversation", conversationSchema);
 

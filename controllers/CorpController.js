@@ -8,7 +8,7 @@ const getAllCorps = async (req, res) => {
   try {
     const corps = await Corp.find(
       {},
-      "_id title location amount category image tier  "
+      "_id title location amount category image tier createdAt  "
     );
     return res.status(200).json({ corps });
   } catch (error) {
