@@ -24,12 +24,12 @@ const CorpSchema = new mongoose.Schema(
       // required: true,
     },
     image: {
-      type: String,
+      type: [String],
       required: false,
     },
     desc: {
       type: String,
-      required: true,
+      required: false,
     },
     tier: {
       type: String,

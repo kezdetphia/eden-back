@@ -22,6 +22,7 @@ const getAllCorps = async (req, res) => {
 
 const createCorp = async (req, res) => {
   try {
+    console.log("Request body:", req.body); // Log the request body
     // Validate request body
     if (
       !req.body.title ||
