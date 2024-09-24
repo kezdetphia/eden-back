@@ -20,6 +20,8 @@ const getAllCorps = async (req, res) => {
   }
 };
 
+//adding to be able to commit
+
 const createCorp = async (req, res) => {
   try {
     console.log("Request body:", req.body); // Log the request body
