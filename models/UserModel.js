@@ -35,8 +35,8 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.virtual("myCorps", {
-  ref: "Corp",
+userSchema.virtual("myProducts", {
+  ref: "Product",
   localField: "_id",
   foreignField: "owner",
 });

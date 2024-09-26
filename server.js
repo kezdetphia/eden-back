@@ -4,7 +4,7 @@ const http = require("http");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const userRoutes = require("./routes/UserRoutes");
-const CorpRoutes = require("./routes/CorpRoutes");
+const ProductRoutes = require("./routes/ProductRoutes");
 const MessageRoutes = require("./routes/MessageRoutes");
 const socketServer = require("./socketServer"); // Import the socketServer module
 
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/users", userRoutes);
-app.use("/", CorpRoutes);
+app.use("/", ProductRoutes);
 app.use("/message", MessageRoutes);
 
 mongoose

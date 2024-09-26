@@ -10,6 +10,6 @@ router.post("/signin", UserController.signIn);
 
 router.get("/:id", UserController.getUser);
 
-router.get("/getuserwithcorps/:id", UserController.getUserWithCorps);
+router.get("/getuserwithproducts/:id", UserController.getUserWithProducts);
 
 module.exports = router;

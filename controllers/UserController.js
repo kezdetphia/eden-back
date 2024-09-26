@@ -95,10 +95,10 @@ const getUser = async (req, res) => {
   }
 };
 
-const getUserWithCorps = async (req, res) => {
+const getUserWithProducts = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findById(id).populate("myCorps");
+    const user = await User.findById(id).populate("myProducts");
     if (user) {
       const { password, ...userWithoutPassword } = user.toObject();
       console.log(userWithoutPassword);
@@ -107,7 +107,7 @@ const getUserWithCorps = async (req, res) => {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    console.error("Error fetching user with corps:", error);
+    console.error("Error fetching user with products:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -116,5 +116,5 @@ module.exports = {
   signUp,
   signIn,
   getUser,
-  getUserWithCorps,
+  getUserWithProducts,
 };
