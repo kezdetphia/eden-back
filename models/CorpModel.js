@@ -37,6 +37,10 @@ const CorpSchema = new mongoose.Schema(
     price: {
       type: String,
     },
+    exchangeFor: {
+      type: [String],
+      required: false,
+    },
     comments: [
       {
         text: {

@@ -27,11 +27,11 @@ const createCorp = async (req, res) => {
     if (
       !req.body.title ||
       !req.body.category ||
-      !req.body.owner ||
-      !req.body.location
+      !req.body.owner
+      // || !req.body.location
     ) {
       return res.status(400).json({
-        error: "Missing required fields: name, category, owner, location",
+        error: "Missing required fields: title, category, owner, location",
       });
     }
 
