@@ -41,6 +41,10 @@ const ProductSchema = new mongoose.Schema(
       type: [String],
       required: false,
     },
+    location: {
+      type: String,
+      required: true,
+    },
     comments: [
       {
         text: {
