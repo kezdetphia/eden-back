@@ -8,7 +8,7 @@ const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find(
       {},
-      "_id title location amount category image tier createdAt  "
+      "_id title location availableQuantity category image tier createdAt  "
     );
     return res.status(200).json({ products });
   } catch (error) {

@@ -15,7 +15,7 @@ const ProductSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    amount: {
+    availableQuantity: {
       type: String,
       required: false,
     },
