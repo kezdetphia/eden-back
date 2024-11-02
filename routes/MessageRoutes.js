@@ -10,6 +10,8 @@ router.get(
   MessageController.getConversationBetweenTwo
 );
 
+router.post("/send", MessageController.sendMessage);
+
 // router.get(
 //   "/conversation/:conversationId",
 //   MessageController.getConversationByConversationId

@@ -31,7 +31,7 @@ const createProduct = async (req, res) => {
       !req.body.location
     ) {
       return res.status(400).json({
-        error: "Missing required fields: title, category, owner, location",
+        error: "Missing required fields",
       });
     }
 

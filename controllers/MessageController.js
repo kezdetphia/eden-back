@@ -73,6 +73,58 @@ const getUserIdsConversations = async (req, res) => {
   }
 };
 
+const sendMessage = async (req, res) => {
+  const { from, to, message } = req.body;
+
+  try {
+    // Validate ObjectId formats
+    if (
+      !mongoose.Types.ObjectId.isValid(from) ||
+      !mongoose.Types.ObjectId.isValid(to)
+    ) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    // Find or create the conversation
+    let conversation = await Conversation.findOne({
+      participants: { $all: [from, to] },
+    });
+
+    if (!conversation) {
+      // Create a new conversation
+      conversation = new Conversation({
+        participants: [from, to],
+        messages: [],
+      });
+    }
+
+    // Create the new message
+    const newMessage = {
+      from,
+      message,
+      timestamp: new Date(),
+    };
+
+    // Add the message to the conversation
+    conversation.messages.push(newMessage);
+
+    // Save the conversation
+    await conversation.save();
+
+    // Emit the message via WebSocket
+    const io = req.app.get("socketio");
+    io.to(to).emit("newMessage", {
+      conversationId: conversation._id,
+      message: newMessage,
+    });
+
+    res.status(200).json({ message: "Message sent successfully." });
+  } catch (error) {
+    console.error("Error sending message:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 //not used but great function so keeping it for now
 // const getConversationByConversationId = async (req, res) => {
 //   const { conversationId } = req.params;
@@ -147,6 +199,7 @@ const getUserIdsConversations = async (req, res) => {
 module.exports = {
   getConversationBetweenTwo,
   getUserIdsConversations,
+  sendMessage,
   // getConversationByConversationId,
   // getAllMyChatPartnersUserData,
 };
