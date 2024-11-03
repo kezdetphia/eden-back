@@ -201,7 +201,7 @@ const sendMessage = async (req, res) => {
     await newMessage.save();
 
     // Emit the message via WebSocket
-    const io = req.app.get("socketio"); // Assuming you've set Socket.IO in app
+    const io = req.app.get("socketio");
     io.to(from).emit("newMessage", {
       conversationId: conversation._id,
       from,
