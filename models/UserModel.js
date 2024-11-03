@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema(
     conversations: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
     ],
+    deviceToken: {
+      type: String, // For push notifications
+    },
   },
   { timestamps: true }
 );
