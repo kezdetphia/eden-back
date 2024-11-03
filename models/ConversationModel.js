@@ -6,6 +6,11 @@ const conversationSchema = new mongoose.Schema(
     participants: [
       { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     ],
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product", // Assuming there's a Product model
+      required: true,
+    },
     productImageUrl: {
       type: String,
       trim: true,
@@ -17,8 +22,8 @@ const conversationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Index for faster queries on participants
-conversationSchema.index({ participants: 1 });
+// Index for faster queries on participants and productId
+conversationSchema.index({ participants: 1, productId: 1 });
 
 const Conversation = mongoose.model("Conversation", conversationSchema);
 

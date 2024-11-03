@@ -27,27 +27,37 @@ const socketServer = (server) => {
     // Handle private messages
     socket.on(
       "private message",
-      async ({ from, to, message, productImageUrl }) => {
-        console.log(`Private message from ${from} to ${to}: ${message}`);
+      async ({ from, to, message, productImageUrl, productId }) => {
+        console.log(
+          `Private message from ${from} to ${to} about product ${productId}: ${message}`
+        );
 
         try {
           // Validate ObjectId formats
           if (
             !mongoose.Types.ObjectId.isValid(from) ||
-            !mongoose.Types.ObjectId.isValid(to)
+            !mongoose.Types.ObjectId.isValid(to) ||
+            !mongoose.Types.ObjectId.isValid(productId)
           ) {
-            console.log("Invalid user ID format:", from, to);
+            console.log(
+              "Invalid user ID or product ID format:",
+              from,
+              to,
+              productId
+            );
             return;
           }
 
-          // Find or create the conversation
+          // Find or create the conversation based on participants and productId
           let conversation = await Conversation.findOne({
             participants: { $all: [from, to] },
+            productId, // Ensure it matches the product ID
           });
 
           if (!conversation) {
             conversation = new Conversation({
               participants: [from, to],
+              productId,
               productImageUrl,
             });
             await conversation.save();
@@ -79,6 +89,7 @@ const socketServer = (server) => {
             to,
             message,
             timestamp: newMessage.timestamp, // Ensure timestamp is included
+            productId, // Include productId for clarity
           };
 
           // Emit the message to the sender and recipient
