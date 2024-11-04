@@ -8,7 +8,7 @@ const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find(
       {},
-      "_id title location availableQuantity category image tier createdAt  "
+      "_id title zipcode availableQuantity category image tier createdAt  "
     );
     return res.status(200).json({ products });
   } catch (error) {
@@ -28,7 +28,7 @@ const createProduct = async (req, res) => {
       !req.body.title ||
       !req.body.category ||
       !req.body.owner ||
-      !req.body.location
+      !req.body.zipcode
     ) {
       return res.status(400).json({
         error: "Missing required fields: title, category, owner, location",
@@ -122,9 +122,40 @@ const addCommentToProduct = async (req, res) => {
   }
 };
 
+const filterProducts = async (req, res) => {
+  const { latitude, longitude, radius, category, tier, title } = req.query;
+  try {
+    const query = {};
+
+    // Add geolocation filter if coordinates and radius are provided
+    if (latitude && longitude && radius) {
+      query.geoLocation = {
+        $geoWithin: {
+          $centerSphere: [
+            [parseFloat(longitude), parseFloat(latitude)],
+            radius / 3963.2,
+          ], // Radius in miles
+        },
+      };
+    }
+
+    // Add additional filters if provided
+    if (category) query.category = category;
+    if (tier) query.tier = tier;
+    if (title) query.title = { $regex: title, $options: "i" }; // Partial match
+
+    const products = await Product.find(query);
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Error fetching products", error });
+  }
+};
+
 module.exports = {
   getAllProducts,
   createProduct,
   getProduct,
   addCommentToProduct,
+  filterProducts,
 };

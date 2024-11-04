@@ -2,70 +2,36 @@ const mongoose = require("mongoose");
 
 const ProductSchema = new mongoose.Schema(
   {
-    category: {
-      type: String,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
+    category: { type: String, required: true },
+    title: { type: String, required: true },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    availableQuantity: {
-      type: String,
-      required: false,
+    zipcode: { type: String },
+    availableQuantity: { type: String },
+    geoLocation: {
+      type: { type: String, enum: ["Point"], default: "Point" },
+      coordinates: { type: [Number], required: true },
     },
-    location: {
-      type: String,
-      // required: true,
-    },
-    image: {
-      type: [String],
-      required: false,
-    },
-    desc: {
-      type: String,
-      required: false,
-    },
-    tier: {
-      type: String,
-    },
-    price: {
-      type: String,
-    },
-    exchangeFor: {
-      type: [String],
-      required: false,
-    },
-    location: {
-      type: String,
-      required: true,
-    },
+    image: { type: [String] },
+    desc: { type: String },
+    tier: { type: String },
+    price: { type: String },
+    exchangeFor: { type: [String] },
     comments: [
       {
-        text: {
-          type: String,
-          // required: true,
-        },
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          // required: true,
-        },
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
+        text: { type: String },
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        createdAt: { type: Date, default: Date.now },
       },
     ],
   },
   { timestamps: true }
 );
 
-const Product = mongoose.model("Product", ProductSchema);
+// Create a 2dsphere index for the geoLocation field
+ProductSchema.index({ geoLocation: "2dsphere" });
 
-module.exports = Product;
+module.exports = mongoose.model("Product", ProductSchema);
