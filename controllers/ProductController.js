@@ -127,14 +127,14 @@ const filterProducts = async (req, res) => {
   try {
     const query = {};
 
-    // Add geolocation filter if coordinates and radius are provided
+    // Geo-filter using $geoWithin and $centerSphere
     if (latitude && longitude && radius) {
       query.geoLocation = {
         $geoWithin: {
           $centerSphere: [
             [parseFloat(longitude), parseFloat(latitude)],
-            radius / 3963.2,
-          ], // Radius in miles
+            radius / 3963.2, // Radius in miles; use 6378.1 for kilometers
+          ],
         },
       };
     }
